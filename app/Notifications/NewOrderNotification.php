@@ -9,7 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Mail\Mailable;
 
-class NewOrderNotification extends Notification
+class NewOrderNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 

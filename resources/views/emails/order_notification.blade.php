@@ -11,7 +11,7 @@
     
     <p>Dear {{$order->user->name}},</p>
 
-    <p>Your order with Number {{ $order['order_id'] }} has been created successfully.</p>
+    <p>Your order with Number {{$order['order_id']}} has been created successfully.</p>
 
    
 

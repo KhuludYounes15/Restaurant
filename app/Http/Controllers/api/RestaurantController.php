@@ -11,6 +11,7 @@ use App\Http\Resources\MenuRestaurantResource;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use App\Jobs\sendEmailjobs;
 class RestaurantController extends Controller
 { use GeneralTrait;
     /**
@@ -63,7 +64,7 @@ class RestaurantController extends Controller
         // Validation rules
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|unique:restaurants,name',
-            'cuisine_type' => 'required|string|unique:restaurants,cuisine_type',
+            'cuisine_type' => 'required|string',
             'location' => 'required|string',
             'phone' => 'required|min:10|unique:restaurants,phone',
         ]);
@@ -82,6 +83,8 @@ class RestaurantController extends Controller
                 'location' => $request->location,
                 'phone' => $request->phone,
             ]);
+            
+            sendEmailjobs::dispatch($restaurant);
             
             return $this->apiResponse($restaurant, true, null, 200);
         } catch (\Exception $e) {

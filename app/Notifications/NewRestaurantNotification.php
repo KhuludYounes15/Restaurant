@@ -7,21 +7,23 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PasswordResetNotification extends Notification implements ShouldQueue
- 
-{
-    use Queueable;
+class NewRestaurantNotification extends Notification implements ShouldQueue
+{     use Queueable;
+
+    protected $restaurant;
     protected $user;
-    protected $resetPasswordToken;
+
     /**
      * Create a new notification instance.
      *
+     * @param  mixed  $user
+     * @param  mixed  $restaurant
      * @return void
      */
-    public function __construct($user, $resetPasswordToken)
+    public function __construct($user, $restaurant)
     {
         $this->user = $user;
-        $this->resetPasswordToken = $resetPasswordToken;
+        $this->restaurant = $restaurant;
     }
 
     /**
@@ -43,15 +45,14 @@ class PasswordResetNotification extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        // Here you can customize the email body
         return (new MailMessage)
-        ->subject('Password Reset Request')
-        ->greeting('Hello ' . $this->user->name . ',')
-        ->line('You are receiving this email because we received a password reset request for your account.')
-        ->line('Your reset password token is: ' . $this->resetPasswordToken)
-        ->line('If you did not request a password reset, no further action is required.')
-        ->action('Reset Password', url('/reset-password?token=' . $this->resetPasswordToken))
-        ->line('Thank you for using our application!');
+            ->subject('New Restaurant Added')
+            ->greeting('Hello ' . $this->user->name . ',')
+            ->line('A new restaurant has been added: ' . $this->restaurant->name)
+            ->line('Cuisine type: ' . $this->restaurant->cuisine_type)
+            ->line('Contact: ' . $this->restaurant->phone)
+            ->action('View Restaurant', url('/restaurants/' . $this->restaurant->location))
+            ->line('Thank you for using our application!');
     }
 
     /**
